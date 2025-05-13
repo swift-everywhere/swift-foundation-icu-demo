@@ -1,0 +1,50 @@
+name: swift-foundation-icu-demo
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - '*'
+jobs:
+  linux:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout swift-foundation-icu-demo
+        uses: actions/checkout@v4
+        with:
+          path: swift-foundation-icu-demo
+      - name: Checkout swift-foundation
+        uses: actions/checkout@v4
+        with:
+          repository: swiftlang/swift-foundation
+          path: swift-corelibs-foundation
+      - name: Checkout swift-corelibs-foundation
+        uses: actions/checkout@v4
+        with:
+          repository: swiftlang/swift-corelibs-foundation
+          path: swift-corelibs-foundation
+      - name: Checkout swift-collections
+        uses: actions/checkout@v4
+        with:
+          repository: apple/swift-collections
+          path: swift-collections
+      - name: Checkout swift-foundation-icu
+        uses: actions/checkout@v4
+        with:
+          repository: swiftlang/swift-foundation-icu
+          path: swift-corelibs-foundation-icu
+      - name: "Test Swift Package on Linux"
+        run: swift test --package-path swift-foundation-icu-demo
+      - name: Apply swift-corelibs-foundation-icu PR #53
+        working-directory: swift-corelibs-foundation-icu
+        run: gh pr checkout 53
+      - name: "Build Foundation"
+        working-directory: swift-foundation
+        run: SWIFTCI_USE_LOCAL_DEPS=.. swift build
+      - name: "Run Foundation InternationalizationBenchmarks"
+        working-directory: swift-foundation/Benchmarks
+        run: SWIFTCI_USE_LOCAL_DEPS=.. swift run InternationalizationBenchmarks
+
+
