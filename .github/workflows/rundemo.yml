@@ -44,9 +44,8 @@ jobs:
         run: ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA swift test
       - name: "Build Foundation"
         working-directory: swift-foundation
-        #run: SWIFTCI_USE_LOCAL_DEPS=${{ github.workspace }} swift build
-        run: swift build
+        run: SWIFTCI_USE_LOCAL_DEPS=.. swift build
       - name: "Run Foundation InternationalizationBenchmarks"
         working-directory: swift-foundation/Benchmarks
-        run: SWIFTCI_USE_LOCAL_DEPS=${{ github.workspace }} swift run InternationalizationBenchmarks
+        run: SWIFTCI_USE_LOCAL_DEPS=.. swift run InternationalizationBenchmarks
 
