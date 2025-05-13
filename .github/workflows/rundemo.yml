@@ -42,6 +42,9 @@ jobs:
       - name: "Test swift-foundation-icu-demo"
         if: false
         run: ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA swift test
+      - run: ls
+      - run: ls ${{ github.workspace }}
+      - run: swift-foundation
       - name: "Build Foundation"
         working-directory: swift-foundation
         run: SWIFTCI_USE_LOCAL_DEPS=${{ github.workspace }} swift build
