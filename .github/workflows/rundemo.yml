@@ -30,17 +30,23 @@ jobs:
         with:
           repository: apple/swift-collections
           path: swift-collections
+      - name: "Checkout swift-syntax"
+        uses: actions/checkout@v4
+        with:
+          repository: apple/swift-syntax
+          path: swift-syntax
       - name: "Checkout swift-foundation-icu"
         uses: actions/checkout@v4
         with:
           repository: swiftlang/swift-foundation-icu
           path: swift-foundation-icu
       - name: "Apply swift-corelibs-foundation-icu PR #53"
-        if: false
+        #if: false
         working-directory: swift-corelibs-foundation-icu
         run: gh pr checkout 53
+      - run: ls ${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA
       - name: "Test swift-foundation-icu-demo"
-        if: false
+        #if: false
         run: ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA swift test
       - name: "Build Foundation"
         working-directory: swift-foundation
