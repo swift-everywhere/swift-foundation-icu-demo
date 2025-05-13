@@ -34,7 +34,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: swiftlang/swift-foundation-icu
-          path: swift-corelibs-foundation-icu
+          path: swift-foundation-icu
       - name: "Apply swift-corelibs-foundation-icu PR #53"
         if: false
         working-directory: swift-corelibs-foundation-icu
