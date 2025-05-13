@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: swiftlang/swift-foundation
-          path: swift-corelibs-foundation
+          path: swift-foundation
       - name: "Checkout swift-corelibs-foundation"
         uses: actions/checkout@v4
         with:
