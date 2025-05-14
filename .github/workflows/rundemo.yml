@@ -40,11 +40,14 @@ jobs:
         with:
           repository: swiftlang/swift-foundation-icu
           path: swift-foundation-icu
-      - name: "Apply swift-corelibs-foundation-icu PR #53"
+      - name: "Apply swift-foundation-icu PR #53"
         #if: false
-        working-directory: swift-corelibs-foundation-icu
+        working-directory: swift-foundation-icu
         run: gh pr checkout 53
       - run: ls ${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA
+      - name: "Patch swift-foundation-icu to run on Linux"
+        working-directory: swift-foundation-icu
+        run: perl -pi -e 's/"USE_PACKAGE_DATA"/"DISABLED_USE_PACKAGE_DATA"/g' Package.swift
       - name: "Test swift-foundation-icu-demo"
         #if: false
         run: ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA swift test
