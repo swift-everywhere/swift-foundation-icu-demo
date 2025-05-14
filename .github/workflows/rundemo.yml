@@ -43,9 +43,15 @@ jobs:
         with:
           repository: swiftlang/swift-foundation-icu
           path: swift-foundation-icu
+      - name: "Build Foundation"
+        working-directory: swift-foundation
+        run: SWIFTCI_USE_LOCAL_DEPS=${{ github.workspace }}/swift-foundation-icu-demo swift build
       - name: "Test swift-foundation-icu-demo"
         working-directory: swift-foundation-icu-demo
         run: LC_ALL=en_US_POSIX swift test
+      - name: "Run InternationalizationBenchmarks with Packaged ICU Data"
+        working-directory: swift-foundation/Benchmarks
+        run: SWIFTCI_USE_LOCAL_DEPS=${{ github.workspace }}/swift-foundation-icu-demo LC_ALL=en_US_POSIX swift run InternationalizationBenchmarks
       - name: "Apply swift-foundation-icu PR #53"
         working-directory: swift-foundation-icu
         run: gh pr checkout 53
@@ -60,17 +66,14 @@ jobs:
       - name: "Verify that ICU data file is being used"
         working-directory: swift-foundation-icu-demo
         run: |
-          mv LOCALE_DATA/usr/share/icu/icudt74l.dat LOCALE_DATA/usr/share/icu/icudt74l.dat.old
+          mv LOCALE_DATA/usr/share/icu/icudt74l.dat LOCALE_DATA/usr/share/icu/icudt74l.dat.disabled
           echo '' > LOCALE_DATA/usr/share/icu/icudt74l.dat
           # should fail after we clobber the data file
           ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA LC_ALL=en_US_POSIX swift test || echo "FAILED AS EXPECTED" > /tmp/testsfailed.txt
           cat /tmp/testsfailed.txt
           # move the data file back
-          mv LOCALE_DATA/usr/share/icu/icudt74l.dat.old LOCALE_DATA/usr/share/icu/icudt74l.dat
-      - name: "Build Foundation"
-        working-directory: swift-foundation
-        run: SWIFTCI_USE_LOCAL_DEPS=/Users/runner/work/swift-foundation-icu-demo/swift-foundation-icu-demo swift build
-      - name: "Run Foundation InternationalizationBenchmarks"
+          mv LOCALE_DATA/usr/share/icu/icudt74l.dat.disabled LOCALE_DATA/usr/share/icu/icudt74l.dat
+      - name: "Run InternationalizationBenchmarks with External ICU Data"
         working-directory: swift-foundation/Benchmarks
-        run: SWIFTCI_USE_LOCAL_DEPS=/Users/runner/work/swift-foundation-icu-demo/swift-foundation-icu-demo LC_ALL=en_US_POSIX swift run InternationalizationBenchmarks
+        run: ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA SWIFTCI_USE_LOCAL_DEPS=${{ github.workspace }}/swift-foundation-icu-demo LC_ALL=en_US_POSIX swift run InternationalizationBenchmarks
 
