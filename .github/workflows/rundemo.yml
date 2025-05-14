@@ -40,26 +40,30 @@ jobs:
         with:
           repository: swiftlang/swift-foundation-icu
           path: swift-foundation-icu
+      - name: "Test swift-foundation-icu-demo"
+        working-directory: swift-foundation-icu-demo
+        run: swift test
       - name: "Apply swift-foundation-icu PR #53"
-        #if: false
         working-directory: swift-foundation-icu
         run: gh pr checkout 53
         env:
           GH_TOKEN: ${{ github.token }}
       - run: ls ${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA/usr/share/icu/icudt74l.dat
-      - name: "Patch swift-foundation-icu to run on Linux"
+      - name: "Patch swift-foundation-icu to use data file on Linux"
         working-directory: swift-foundation-icu
         run: perl -pi -e 's/"USE_PACKAGE_DATA"/"DISABLED_USE_PACKAGE_DATA"/g' Package.swift
-      - name: "Test swift-foundation-icu-demo"
+      - name: "Test swift-foundation-icu-demo with data file"
         working-directory: swift-foundation-icu-demo
         run: ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA swift test
-      - name: "Corrupt locale data"
-        run: echo '' > ${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA/usr/share/icu/icudt74l.dat
-      - name: "Re-test swift-foundation-icu-demo"
+      - name: "Verify that ICU data file is being used"
         working-directory: swift-foundation-icu-demo
-        # should fail
-        run: ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA swift test
-
+        run: |
+          mv LOCALE_DATA/usr/share/icu/icudt74l.dat LOCALE_DATA/usr/share/icu/icudt74l.dat.old
+          echo '' > LOCALE_DATA/usr/share/icu/icudt74l.dat
+          # should fail
+          ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA swift test || true
+          # move the data file back
+          mv LOCALE_DATA/usr/share/icu/icudt74l.dat.old LOCALE_DATA/usr/share/icu/icudt74l.dat
       - name: "Build Foundation"
         working-directory: swift-foundation
         run: SWIFTCI_USE_LOCAL_DEPS=.. swift build
