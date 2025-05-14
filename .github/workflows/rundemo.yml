@@ -15,6 +15,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: swift-foundation-icu-demo
+      - name: "Checkout ICU"
+        uses: actions/checkout@v4
+        with:
+          repository: apple-oss-distributions/ICU
+          path: ICU
+      - name: "Build ICU Data"
+        working-directory: ICU
+        run: make icu
       - name: "Checkout swift-foundation"
         uses: actions/checkout@v4
         with:
@@ -48,7 +56,6 @@ jobs:
         run: gh pr checkout 53
         env:
           GH_TOKEN: ${{ github.token }}
-      - run: ls ${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA/usr/share/icu/icudt74l.dat
       - name: "Patch swift-foundation-icu to use data file on Linux"
         working-directory: swift-foundation-icu
         run: perl -pi -e 's/"USE_PACKAGE_DATA"/"DISABLED_USE_PACKAGE_DATA"/g' Package.swift
@@ -60,7 +67,7 @@ jobs:
         run: |
           mv LOCALE_DATA/usr/share/icu/icudt74l.dat LOCALE_DATA/usr/share/icu/icudt74l.dat.old
           echo '' > LOCALE_DATA/usr/share/icu/icudt74l.dat
-          # should fail
+          # should fail after we clobber the data file
           ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA swift test || true
           # move the data file back
           mv LOCALE_DATA/usr/share/icu/icudt74l.dat.old LOCALE_DATA/usr/share/icu/icudt74l.dat
