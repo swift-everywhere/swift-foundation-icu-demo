@@ -15,14 +15,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: swift-foundation-icu-demo
-      - name: "Checkout ICU"
-        uses: actions/checkout@v4
-        with:
-          repository: apple-oss-distributions/ICU
-          path: ICU
-      - name: "Build ICU Data"
-        working-directory: ICU
-        run: make icu
       - name: "Checkout swift-foundation"
         uses: actions/checkout@v4
         with:
