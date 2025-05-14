@@ -46,13 +46,20 @@ jobs:
         run: gh pr checkout 53
         env:
           GH_TOKEN: ${{ github.token }}
-      - run: ls ${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA
+      - run: ls ${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA/usr/share/icu/icudt74l.dat
       - name: "Patch swift-foundation-icu to run on Linux"
         working-directory: swift-foundation-icu
         run: perl -pi -e 's/"USE_PACKAGE_DATA"/"DISABLED_USE_PACKAGE_DATA"/g' Package.swift
       - name: "Test swift-foundation-icu-demo"
-        #if: false
+        working-directory: swift-foundation-icu-demo
         run: ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA swift test
+      - name: "Corrupt locale data"
+        run: echo '' > ${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA/usr/share/icu/icudt74l.dat
+      - name: "Re-test swift-foundation-icu-demo"
+        working-directory: swift-foundation-icu-demo
+        # should fail
+        run: ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA swift test
+
       - name: "Build Foundation"
         working-directory: swift-foundation
         run: SWIFTCI_USE_LOCAL_DEPS=.. swift build
