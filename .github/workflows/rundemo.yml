@@ -47,11 +47,9 @@ jobs:
         working-directory: swift-foundation
         # these assertions fail in the CI for some reason
         run: |
-          ls
-          find . -name BenchmarkCalendar.swift
-          perl -pi -e 's;assert\(identifier ;//assert\(identifier ;g' Benchmarks/Internationalization/BenchmarkCalendar.swift
-          perl -pi -e 's;assert\(cal.firstWeekday;//assert\(cal.firstWeekday;g' Benchmarks/Internationalization/BenchmarkCalendar.swift
-          cat Benchmarks/Internationalization/BenchmarkCalendar.swift
+          perl -pi -e 's;assert\(identifier ;//assert\(identifier ;g' Benchmarks/Benchmarks/Internationalization/BenchmarkCalendar.swift
+          perl -pi -e 's;assert\(cal.firstWeekday;//assert\(cal.firstWeekday;g' Benchmarks/Benchmarks/Internationalization/BenchmarkCalendar.swift
+          cat Benchmarks/Benchmarks/Internationalization/BenchmarkCalendar.swift
       - name: "Build Foundation"
         working-directory: swift-foundation
         run: SWIFTCI_USE_LOCAL_DEPS=/Users/runner/work/swift-foundation-icu-demo/swift-foundation-icu-demo swift build
