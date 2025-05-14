@@ -8,7 +8,8 @@ on:
       - '*'
 jobs:
   InternationalizationBenchmarks:
-    runs-on: ubuntu-24.04
+    #runs-on: ubuntu-24.04
+    runs-on: macos-15
     timeout-minutes: 30
     steps:
       - name: "Checkout swift-foundation-icu-demo"
@@ -52,7 +53,6 @@ jobs:
         working-directory: swift-foundation-icu
         run: perl -pi -e 's/"USE_PACKAGE_DATA"/"DISABLED_USE_PACKAGE_DATA"/g' Package.swift
       - name: "Test swift-foundation-icu-demo with data file"
-        if: false
         working-directory: swift-foundation-icu-demo
         run: ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA swift test
       - name: "Verify that ICU data file is being used"
