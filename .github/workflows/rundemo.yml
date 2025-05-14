@@ -65,12 +65,12 @@ jobs:
       - name: "Verify that ICU data file is being used"
         working-directory: swift-foundation-icu-demo
         run: |
-          mv LOCALE_DATA/usr/share/icu/icudt74l.dat LOCALE_DATA/usr/share/icu/icudt74l.dat.old
-          echo '' > LOCALE_DATA/usr/share/icu/icudt74l.dat
+          mv LOCALE_DATA/usr/share/icu/icudt76l.dat LOCALE_DATA/usr/share/icu/icudt76l.dat.old
+          echo '' > LOCALE_DATA/usr/share/icu/icudt76l.dat
           # should fail after we clobber the data file
           ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA swift test || true
           # move the data file back
-          mv LOCALE_DATA/usr/share/icu/icudt74l.dat.old LOCALE_DATA/usr/share/icu/icudt74l.dat
+          mv LOCALE_DATA/usr/share/icu/icudt76l.dat.old LOCALE_DATA/usr/share/icu/icudt76l.dat
       - name: "Build Foundation"
         working-directory: swift-foundation
         run: SWIFTCI_USE_LOCAL_DEPS=.. swift build
