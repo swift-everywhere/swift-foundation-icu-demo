@@ -12,6 +12,8 @@ jobs:
     runs-on: macos-15
     timeout-minutes: 30
     steps:
+      - name: "Install Dependencies: jemalloc"
+        run: brew install jemalloc
       - name: "Checkout swift-foundation-icu-demo"
         uses: actions/checkout@v4
         with:
