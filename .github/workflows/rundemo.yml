@@ -55,16 +55,24 @@ jobs:
         run: SWIFTCI_USE_LOCAL_DEPS=/Users/runner/work/swift-foundation-icu-demo/swift-foundation-icu-demo swift build
       - name: "Test swift-foundation-icu-demo"
         working-directory: swift-foundation-icu-demo
-        run: LC_ALL=en_US_POSIX swift test
+        run: |
+          LC_ALL=en_US_POSIX swift test
+          .build/arm64-apple-macosx/debug/FoundationICUDemoPackageTests.xctest/Contents/MacOS/FoundationICUDemoPackageTests
       - name: "Run InternationalizationBenchmarks with Packaged ICU Data"
         working-directory: swift-foundation/Benchmarks
-        run: USE_PACKAGE=1 SWIFTCI_USE_LOCAL_DEPS=/Users/runner/work/swift-foundation-icu-demo/swift-foundation-icu-demo LC_ALL=en_US_POSIX swift run InternationalizationBenchmarks
+        run: |
+          USE_PACKAGE=1 SWIFTCI_USE_LOCAL_DEPS=/Users/runner/work/swift-foundation-icu-demo/swift-foundation-icu-demo LC_ALL=en_US_POSIX swift run InternationalizationBenchmarks
+          ls -lah .build/arm64-apple-macosx/debug/InternationalizationBenchmarks
       - name: "Run InternationalizationBenchmarks with Packaged ICU Data (Again)"
         working-directory: swift-foundation/Benchmarks
-        run: USE_PACKAGE=1 SWIFTCI_USE_LOCAL_DEPS=/Users/runner/work/swift-foundation-icu-demo/swift-foundation-icu-demo LC_ALL=en_US_POSIX swift run InternationalizationBenchmarks
+        run: |
+          USE_PACKAGE=1 SWIFTCI_USE_LOCAL_DEPS=/Users/runner/work/swift-foundation-icu-demo/swift-foundation-icu-demo LC_ALL=en_US_POSIX swift run InternationalizationBenchmarks
+          ls -lah .build/arm64-apple-macosx/debug/InternationalizationBenchmarks
       - name: "Run FormattingBenchmarks with Packaged ICU Data"
         working-directory: swift-foundation/Benchmarks
-        run: USE_PACKAGE=1 SWIFTCI_USE_LOCAL_DEPS=/Users/runner/work/swift-foundation-icu-demo/swift-foundation-icu-demo LC_ALL=en_US_POSIX swift run FormattingBenchmarks
+        run: |
+          USE_PACKAGE=1 SWIFTCI_USE_LOCAL_DEPS=/Users/runner/work/swift-foundation-icu-demo/swift-foundation-icu-demo LC_ALL=en_US_POSIX swift run FormattingBenchmarks
+          ls -lah .build/arm64-apple-macosx/debug/FormattingBenchmarks
       - name: "Apply swift-foundation-icu PR #53"
         working-directory: swift-foundation-icu
         run: gh pr checkout 53
@@ -75,7 +83,9 @@ jobs:
         run: perl -pi -e 's/"USE_PACKAGE_DATA"/"DISABLED_USE_PACKAGE_DATA"/g' Package.swift && cat Package.swift
       - name: "Test swift-foundation-icu-demo with ICU data file"
         working-directory: swift-foundation-icu-demo
-        run: ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA LC_ALL=en_US_POSIX swift test
+        run: |
+          ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA LC_ALL=en_US_POSIX swift test
+          ls -lah .build/arm64-apple-macosx/debug/FoundationICUDemoPackageTests.xctest/Contents/MacOS/FoundationICUDemoPackageTests
       - name: "Verify that ICU data file is being used"
         working-directory: swift-foundation-icu-demo
         run: |
@@ -88,11 +98,17 @@ jobs:
           mv LOCALE_DATA/usr/share/icu/icudt74l.dat.disabled LOCALE_DATA/usr/share/icu/icudt74l.dat
       - name: "Run InternationalizationBenchmarks with External ICU Data"
         working-directory: swift-foundation/Benchmarks
-        run: USE_PACKAGE=1 SWIFTCI_USE_LOCAL_DEPS=/Users/runner/work/swift-foundation-icu-demo/swift-foundation-icu-demo LC_ALL=en_US_POSIX swift run InternationalizationBenchmarks
+        run: |
+          USE_PACKAGE=1 SWIFTCI_USE_LOCAL_DEPS=/Users/runner/work/swift-foundation-icu-demo/swift-foundation-icu-demo LC_ALL=en_US_POSIX swift run InternationalizationBenchmarks
+          ls -lah .build/arm64-apple-macosx/debug/InternationalizationBenchmarks
       - name: "Run InternationalizationBenchmarks with External ICU Data (Again)"
         working-directory: swift-foundation/Benchmarks
-        run: USE_PACKAGE=1 SWIFTCI_USE_LOCAL_DEPS=/Users/runner/work/swift-foundation-icu-demo/swift-foundation-icu-demo LC_ALL=en_US_POSIX swift run InternationalizationBenchmarks
+        run: |
+          USE_PACKAGE=1 SWIFTCI_USE_LOCAL_DEPS=/Users/runner/work/swift-foundation-icu-demo/swift-foundation-icu-demo LC_ALL=en_US_POSIX swift run InternationalizationBenchmarks
+          ls -lah .build/arm64-apple-macosx/debug/InternationalizationBenchmarks
       - name: "Run FormattingBenchmarks with External ICU Data"
         working-directory: swift-foundation/Benchmarks
-        run: USE_PACKAGE=1 SWIFTCI_USE_LOCAL_DEPS=/Users/runner/work/swift-foundation-icu-demo/swift-foundation-icu-demo LC_ALL=en_US_POSIX swift run FormattingBenchmarks
+        run: |
+          USE_PACKAGE=1 SWIFTCI_USE_LOCAL_DEPS=/Users/runner/work/swift-foundation-icu-demo/swift-foundation-icu-demo LC_ALL=en_US_POSIX swift run FormattingBenchmarks
+          ls -lah .build/arm64-apple-macosx/debug/FormattingBenchmarks
 
