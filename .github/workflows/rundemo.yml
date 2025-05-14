@@ -57,7 +57,7 @@ jobs:
         working-directory: swift-foundation-icu-demo
         run: |
           LC_ALL=en_US_POSIX swift test
-          .build/arm64-apple-macosx/debug/FoundationICUDemoPackageTests.xctest/Contents/MacOS/FoundationICUDemoPackageTests
+          ls -lah .build/arm64-apple-macosx/debug/FoundationICUDemoPackageTests.xctest/Contents/MacOS/FoundationICUDemoPackageTests
       - name: "Run InternationalizationBenchmarks with Packaged ICU Data"
         working-directory: swift-foundation/Benchmarks
         run: |
