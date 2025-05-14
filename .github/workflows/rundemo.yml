@@ -43,25 +43,25 @@ jobs:
           path: swift-foundation-icu
       - name: "Test swift-foundation-icu-demo"
         working-directory: swift-foundation-icu-demo
-        run: swift test
+        run: LC_ALL=en_US_POSIX swift test
       - name: "Apply swift-foundation-icu PR #53"
         working-directory: swift-foundation-icu
         run: gh pr checkout 53
         env:
           GH_TOKEN: ${{ github.token }}
-      - name: "Patch swift-foundation-icu to use data file on Linux"
+      - name: "Patch swift-foundation-icu to use ICU data file"
         working-directory: swift-foundation-icu
-        run: perl -pi -e 's/"USE_PACKAGE_DATA"/"DISABLED_USE_PACKAGE_DATA"/g' Package.swift
-      - name: "Test swift-foundation-icu-demo with data file"
+        run: perl -pi -e 's/"USE_PACKAGE_DATA"/"DISABLED_USE_PACKAGE_DATA"/g' Package.swift && cat Package.swift
+      - name: "Test swift-foundation-icu-demo with ICU data file"
         working-directory: swift-foundation-icu-demo
-        run: ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA swift test
+        run: ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA LC_ALL=en_US_POSIX swift test
       - name: "Verify that ICU data file is being used"
         working-directory: swift-foundation-icu-demo
         run: |
           mv LOCALE_DATA/usr/share/icu/icudt76l.dat LOCALE_DATA/usr/share/icu/icudt76l.dat.old
           echo '' > LOCALE_DATA/usr/share/icu/icudt76l.dat
           # should fail after we clobber the data file
-          ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA swift test || true
+          ICU_DATA_DIR_PREFIX=${{ github.workspace }}/swift-foundation-icu-demo/LOCALE_DATA LC_ALL=en_US_POSIX swift test || true
           # move the data file back
           mv LOCALE_DATA/usr/share/icu/icudt76l.dat.old LOCALE_DATA/usr/share/icu/icudt76l.dat
       - name: "Build Foundation"
@@ -69,5 +69,5 @@ jobs:
         run: SWIFTCI_USE_LOCAL_DEPS=.. swift build
       - name: "Run Foundation InternationalizationBenchmarks"
         working-directory: swift-foundation/Benchmarks
-        run: SWIFTCI_USE_LOCAL_DEPS=.. swift run InternationalizationBenchmarks
+        run: SWIFTCI_USE_LOCAL_DEPS=.. LC_ALL=en_US_POSIX swift run InternationalizationBenchmarks
 
